@@ -1,5 +1,5 @@
 # 1. 開発環境を作る
-ランタイムの調整が面倒なので、VoltaとCorepackを使って整えます。  
+ランタイムの調整が面倒なので、Voltaを使って整えます。  
 Node.js 20.x, Volta 1.1.x以降なら問題なく動くと思います。  
 パッケージマネージャとしてはnpmを利用します。yarnやpnpmを使いたい人は適宜読み替えてください。
 
@@ -19,12 +19,14 @@ Windowsの場合は、設定->開発者用モードの有効化 が必要にな�
 ### Setup
 最初に環境作る人や、環境を更新する人だけがやればいいです。
 1. Run `volta pin node@<version>`
+2. Run `volta pin npm@<version>`
 
 以下のような記述が`package.json`内にあればOKです。
 
 ```json
   "volta": {
-    "node": "<major>.<minor>.<revision>"
+    "node": "<major>.<minor>.<revision>",
+    "npm": "<major>.<minor>.<revision>"
   },
 ```
 
@@ -37,22 +39,17 @@ volta pin node@latest
 
 # 最新のLTS。偶数バージョン。リリースから約3年サポート。
 volta pin node@lts
+
+# パッケージマネージャも同様。yarn, pnpm等を利用したい場合は任意に書き換え
+# ただし、npmにはlatestのタグしかなく、LTS版に合わせたパッケージは存在しない。
+# 基本的にNode.jsの奇数・偶数メジャーバージョンを1セットとしてメジャーバージョン提供されるため、ほぼほぼ問題ないが、不安であればNode.js公式ページの互換性を見てpinするといい。
+volta pin npm@latest
 ```
 
-## Corepack
-上記のvoltaの設定を行ったあとに実行してください。
+## VSCode
+開発のためにいくつかの拡張機能を入れます。  
+Ctrl + Shift + Pキーを押して、「recommended」で検索し、「拡張機能:お勧めの拡張機能を表示(Extension: Show Recommended Extensions)」を選択して、表示されたワークスペースの推奨拡張機能を全部入れてください。
 
-### Usage
-1. Run `corepack enable npm`
-2. Run `corepack install`
-
-### Setup
-1. Package.jsonに以下の記述を追加してください。
-```json
-{
-  // ...
-  "packageManager": "npm@<major>.<minor>.<revison>"
-}
-```
-
-基本的にVoltaに管理を委託してるので、Voltaの設定を行ったあとに`npm -v`で出たバージョンをそのまま突っ込めば問題ありません。
+### Devcontainer
+Dev Containersで開発環境作る方が手っ取り早いので、使える人はそっち使ってください。  
+詳細は.devcontainerフォルダ内を確認してください。上記手順を行った時と同様の状態になるように用意してあります。

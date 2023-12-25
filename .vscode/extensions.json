@@ -1,0 +1,24 @@
+{
+  "recommendations": [
+    // VSCode Support
+    "MS-CEINTL.vscode-language-pack-ja",
+    "vscode-icons-team.vscode-icons",
+    "oderwat.indent-rainbow",
+    "shardulm94.trailing-spaces",
+
+    // JavaScript and TypeScript support
+    "dbaeumer.vscode-eslint",
+    "xabikos.JavaScriptSnippets",
+    "dsznajder.es7-react-js-snippets",
+    "esbenp.prettier-vscode",
+    "bradlc.vscode-tailwindcss",
+    "formulahendry.auto-rename-tag",
+
+    // Markdown
+    "yzhang.markdown-all-in-one",
+
+    // Git support
+    "eamodio.gitlens",
+    "mhutchie.git-graph"
+  ]
+}

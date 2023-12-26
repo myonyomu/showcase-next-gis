@@ -22,6 +22,9 @@ Ctrl + Shift + Pキーを押して、「recommended」で検索し、「拡張�
 Dev Containersで開発環境作る方が手っ取り早いので、使える人はそっち使ってください。  
 詳細は.devcontainerフォルダ内を確認してください。上記手順を行った時と同様の状態になるように用意してあります。
 
+### Install libs
+voltaの設定が完了したら、カレントディレクトリをプロジェクトルートに移動し、`npm i`を実行してください。
+
 ## Setup
 以下は最初に環境作る人や、環境を更新する人だけがやればいいです。  
 開発メンバーが全員できるならそれに越したことはありませんが、最悪一人だけできれば大丈夫です。
@@ -132,8 +135,32 @@ Eslint + Prettierで構成しています。
   },
   // ...
 ```
+4. prettierの設定ファイルを作成し、プロジェクトルートに設置。本プロジェクト絵は`.prettier.json`として置いています。  
+作ってある設定内容はかなり好みに寄っているので、各プロジェクトで良きように調整してください。
+```json
+{
+  "tabWidth": 2,
+  "printWidth": 120,
+  "trailingComma": "es5",
+  "semi": true,
+  "singleQuote": true
+}
+```
 
 設定完了後、`npm run format`を実行してlint, formatが通るか確認します。
+
+### Setup: Husky and lint-staged
+
+1. Run `npm i -D husky lint-staged`
+2. Run `npx husky-init`
+3. Run `npx husky install`
+4. Run `npx husky add .husky/pre-commit "npx lint-staged"`
+5. プロジェクトのルートディレクトリに`.lintstagedrc.js`を追加します。内容については[実際のファイルを参照](../.lintstagedrc.js)
+6. GUIを使っている人はユーザーホームディレクトリに`.huskyrc`を追加し、以下を記述します。理由は[リンク先の記事](https://zenn.dev/cureapp/articles/f2722061739b51)および[公式トラブルシューティング](https://typicode.github.io/husky/troubleshooting.html#command-not-found)を参照。
+```sh
+export VOLTA_HOME="$HOME/.volta"
+export PATH="$VOLTA_HOME/bin:$PATH"
+```
 
 ### Setup: Path alias(Optional)
 componentのimportがしんどいので、先にpath aliasを設定してしまいます。

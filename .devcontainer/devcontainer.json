@@ -12,7 +12,7 @@
   // "forwardPorts": [],
 
   // Use 'postCreateCommand' to run commands after the container is created.
-  "postCreateCommand": "/workspaces/next-gis/.devcontainer/init.sh",
+  "postCreateCommand": "$PWD/.devcontainer/init.sh",
 
   "customizations": {
     "vscode": {

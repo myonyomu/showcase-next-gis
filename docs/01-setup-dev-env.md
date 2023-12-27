@@ -162,14 +162,86 @@ export VOLTA_HOME="$HOME/.volta"
 export PATH="$VOLTA_HOME/bin:$PATH"
 ```
 
+### Setup: Vitest
+テストにVitestを利用します。Jestを利用したい場合は適宜読み替えてください。
+
+1. Run `npm i -D vitest @vitejs/plugin-react jsdom @testing-library/react`
+2. [Next.js公式の設定方法]に合わせて設定ファイルを構築する
+
+vitest.config.ts
+```ts
+import { defineConfig } from 'vitest/config'
+import react from '@vitejs/plugin-react'
+ 
+export default defineConfig({
+  plugins: [react()],
+  test: {
+    environment: 'jsdom',
+  },
+})
+```
+
+3. `package.json`内のテストスクリプトを編集する
+  ```json
+  "scripts": {
+    // ...
+    "test": "vitest --passWithNoTests",
+    // ...
+  },
+  ```
+`--passWithNoTests`は初期コミット用にテストファイルが無くてもOKとする設定なので、何らかのテストファイルを書いているならば外してしまってOKです。（というか、テスト完全無視や完全削除、パス指定のミスを見逃さないためにも、一個でもテストを書いたら削除推奨）
+
 ### Setup: Path alias(Optional)
-componentのimportがしんどいので、先にpath aliasを設定してしまいます。
-`tsconfig.json`の`paths`の項目を以下にします。
+componentのimportが相対パスだけだとしんどいので、先にpath aliasを設定してしまいます。  
+`tsconfig.json`の`paths`の項目を以下のようにします。
 
 ```json
     "paths": {
-      "@/*": ["./*"]
+      "@/*": ["./app/*"],
+      "@@/*": ["./*"]
     }
 ```
 
 詳細は[公式の利用方法とサンプル](https://nextjs-ja-translation-docs.vercel.app/docs/advanced-features/module-path-aliases)を確認してください。
+
+### Setup: Storybook(Optional)
+Storybookを利用してUI管理を行う場合、その初期設定を行います。
+
+1. Run `npx storybook@latest init`
+2. Storybook用のフォルダやファイルがスキャフォールディングされるが、2023/12（Ver 7.6.6）時点では特に必要のないonboarding addonも一緒に入ってしまうので削除する。(初めて触るならチュートリアルも一緒に動いてくれるので、試しに触ってから消すのもアリ)
+   - `npm uninstall -D @storybook/addon-onboarding`
+   - `.storybook/main.ts`からアドオン削除
+  ```ts
+  // ...
+  addons: [
+    "@storybook/addon-links",
+    "@storybook/addon-essentials",
+    "@storybook/addon-onboarding",
+    "@storybook/addon-interactions",
+  ],
+  // ...
+  ```
+  ↓
+  ```ts
+  addons: [
+    "@storybook/addon-links",
+    "@storybook/addon-essentials",
+    "@storybook/addon-interactions",
+  ],
+  ```
+  - スキャフォールディングで作成されたstoriesフォルダ内のファイルをすべて削除
+  - 上記のPathsエイリアスの設定を利用するように`.storybook/main.ts`を書き換える。書き換え方は[Storybook公式のトラブルシューティング](https://storybook.js.org/docs/builders/webpack#typescript-modules-are-not-resolved-within-storybook)を参照。
+  ```ts
+  // ...
+  webpackFinal: async (config) => {
+    if (config.resolve) {
+      config.resolve.alias = {
+        ...config.resolve.alias,
+        "@": path.resolve(__dirname, "../app"),
+        "@@": path.resolve(__dirname, "../")
+      };
+    }
+    return config;
+  },
+  // ...
+  ```
